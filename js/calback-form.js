@@ -1,0 +1,66 @@
+const calbackForm = document.querySelector(".callback-form-container");
+const requestReseivedModal = document.querySelector("#request-receved");
+const userName = document.querySelector("#callback-form-input-name");
+const userEmail = document.querySelector("#callback-form-input-email");
+const userPhon = document.querySelector("#callback-form-input-tel");
+
+userPhon.addEventListener("click", function () {
+  if (!userPhon.value.trim()) {
+    userPhon.value = "+380";
+  }
+});
+
+userPhon.addEventListener("blur", function () {
+  if (userPhon.value === "+380") {
+    userPhon.value = "";
+  }
+});
+
+calbackForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  let hasError = false;
+
+  if (!userName.value.trim()) {
+    userName.classList.add("callback-form-input-error");
+    hasError = true;
+  } else {
+    userName.classList.remove("callback-form-input-error");
+  }
+  if (!userEmail.value.trim() || !isEmailValid(userEmail.value)) {
+    userEmail.classList.add("callback-form-input-error");
+    hasError = true;
+  } else {
+    userEmail.classList.remove("callback-form-input-error");
+  }
+
+  if (!userPhon.value.trim() || !isPhoneValid(userPhon.value)) {
+    userPhon.classList.add("callback-form-input-error");
+    hasError = true;
+  } else {
+    userPhon.classList.remove("callback-form-input-error");
+  }
+  if (hasError) {
+    return;
+  }
+
+  userName.value = "";
+  userEmail.value = "";
+  userPhon.value = "";
+
+  requestReseivedModal.classList.add("modal-active");
+
+  setTimeout(function () {
+    requestReseivedModal.classList.remove("modal-active");
+  }, 1500);
+});
+
+function isPhoneValid(phone = "") {
+  const regexp = /(\+38)?\(?\d{3}\)?[\s\.-]?(\d{7}|\d{3}[\s\.-]\d{2}[\s\.-]\d{2}|\d{3}-\d{4})/;
+
+  return phone.match(regexp);
+}
+
+function isEmailValid(email) {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email.toLowerCase());
+}
